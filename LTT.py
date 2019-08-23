@@ -6,7 +6,9 @@ import time
 
 import os
 
-from random import randrange  
+from random import randrange
+
+import re
 
 
 
@@ -46,9 +48,11 @@ def get_random_line(afile, default=None):
 
 
 
+#used for finding the whole word, wanted to avoid using RegEx
 
+def WholeWord(w):
 
-
+    return re.compile(r'\b({0})\b'.format(w), flags=re.IGNORECASE).search
 
     
 
@@ -56,7 +60,7 @@ def get_random_line(afile, default=None):
 
 
 
-def run_bot(r, comments_replied_to, get_random_line):
+def run_bot(r, comments_replied_to, get_random_line, WholeWord):
 
 
 
@@ -68,19 +72,23 @@ def run_bot(r, comments_replied_to, get_random_line):
 
         commentb = comment.body
 
+        
+
         with open('./Responses/LTTResponses.txt', "r" ,encoding='utf-8') as LTTResponses:
 
             for line in LTTResponses:
 
                 line = line.rstrip()
 
-                if line.casefold() == commentb.casefold() and comment.id not in comments_replied_to: #and comment.author != r.user.me():
- 
+                if WholeWord(line)(comment.body) and comment.id not in comments_replied_to and comment.author != r.user.me():
+
                     print("String found in comment" + " " + comment.id)
 
                     with open('lews.txt', encoding='utf-8') as f:
 
                         comment.reply(get_random_line(f))
+
+                    
 
 
 
@@ -106,7 +114,7 @@ def run_bot(r, comments_replied_to, get_random_line):
 
                 Aline = Aline.rstrip()          
 
-                if Aline.casefold() == commentb.casefold() and comment.id not in comments_replied_to: # and comment.author != r.user.me():
+                if WholeWord(Aline)(commentb) and comment.id not in comments_replied_to and comment.author != r.user.me():
 
 
 
@@ -140,7 +148,7 @@ def run_bot(r, comments_replied_to, get_random_line):
 
                 Wline = Wline.rstrip()          
 
-                if Wline.casefold() == commentb.casefold() and comment.id not in comments_replied_to: #and comment.author != r.user.me():
+                if WholeWord(Wline)(commentb) and comment.id not in comments_replied_to and comment.author != r.user.me():
 
                     print("String found in comment" + comment.id)
 
@@ -172,7 +180,7 @@ def run_bot(r, comments_replied_to, get_random_line):
 
                 BWline = BWline.strip()          
 
-                if BWline.casefold() == commentb.casefold() and comment.id not in comments_replied_to: #and comment.author != r.user.me():
+                if WholeWord(BWline)(commentb) and comment.id not in comments_replied_to and comment.author != r.user.me():
 
                     print("String found in comment" + comment.id)
 
@@ -246,4 +254,4 @@ comments_replied_to = get_saved_comments()
 
 while True:
 
-    run_bot(r, comments_replied_to, get_random_line)
+    run_bot(r, comments_replied_to, get_random_line, WholeWord)
