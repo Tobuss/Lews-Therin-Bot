@@ -75,7 +75,7 @@ def run_bot(r, comments_replied_to, get_random_line):
                 line = line.rstrip()
 
                 if line.casefold() == commentb.casefold() and comment.id not in comments_replied_to: #and comment.author != r.user.me():
-
+ 
                     print("String found in comment" + " " + comment.id)
 
                     with open('lews.txt', encoding='utf-8') as f:
