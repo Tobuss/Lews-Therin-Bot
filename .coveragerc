@@ -1,0 +1,16 @@
+[run]
+branch = True
+
+[paths]
+source = src/
+
+[report]
+show_missing = true
+precision = 2
+omit = tests/*
+
+[html]
+directory = code-coverage-html
+
+[xml]
+output = ./code-coverage-html/coverage.xml
